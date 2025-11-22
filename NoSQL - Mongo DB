@@ -1,0 +1,26 @@
+dubis@dubis-VirtualBox: docker run -d --name mongodb -p 27017:27017 -v mongodb_data:/data/db mongo:5.0
+dubis@dubis-VirtualBox: docker exec mongodb mongosh --eval "db.version()"
+dubis@dubis-VirtualBox: pip3 install pymongo
+dubis@dubis-VirtualBox: sudo apt install -y python3-pymongo
+dubis@dubis-VirtualBox: python3 -c "import pymongo; print('pymongo instalado correctamente')"
+dubis@dubis-VirtualBox: python3 -m venv mongodb_env
+dubis@dubis-VirtualBox: source mongodb_env/bin/activate
+dubis@dubis-VirtualBox: pip install pymongo
+dubis@dubis-VirtualBox: python3 -c "import pymongo; print('pymongo instalado en entorno virtual')"
+dubis@dubis-VirtualBox: mkdir -p ~/ecommerce_mongodb
+dubis@dubis-VirtualBox: cd ~/ecommerce_mongodb
+# Acceder a MongoDB directamente
+dubis@dubis-VirtualBox: docker exec -it mongodb mongosh tienda_analytics
+dubis@dubis-VirtualBox: sudo apt install -y mongodb
+dubis@dubis-VirtualBox: wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+dubis@dubis-VirtualBox: echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+dubis@dubis-VirtualBox: sudo apt install -y mongodb-org
+dubis@dubis-VirtualBox: sudo apt remove --purge mongodb-org* -y
+dubis@dubis-VirtualBox: sudo rm -f /etc/apt/sources.list.d/mongodb-org-*.list
+dubis@dubis-VirtualBox: wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+dubis@dubis-VirtualBox: echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+dubis@dubis-VirtualBox: sudo apt install -y mongodb-org
+dubis@dubis-VirtualBox: source mongodb_env/bin/activate
+dubis@dubis-VirtualBox: cd /ecommerce_mongodb
+dubis@dubis-VirtualBox: cd ~/ecommerce_mongodb
+
