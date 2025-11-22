@@ -1,0 +1,13 @@
+dubis@dubis-VirtualBox: npm init -y
+dubis@dubis-VirtualBox: npm install express sqlite3
+dubis@dubis-VirtualBox: npm init -y
+dubis@dubis-VirtualBox: npm install express sqlite3
+dubis@dubis-VirtualBox: sudo apt install nodejs npm -y
+dubis@dubis-VirtualBox: node -v
+dubis@dubis-VirtualBox: npm -v
+dubis@dubis-VirtualBox: npm init -y
+dubis@dubis-VirtualBox: npm install express sqlite3
+dubis@dubis-VirtualBox: const express = require('express');
+dubis@dubis-VirtualBox: const app = express();
+dubis@dubis-VirtualBox: node server.js
+
