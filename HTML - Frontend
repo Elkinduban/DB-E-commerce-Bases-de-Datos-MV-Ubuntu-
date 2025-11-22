@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛍️ Tienda de Ropa - Dubis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background: rgba(44, 62, 80, 0.95);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        nav {
+            background: rgba(52, 73, 94, 0.95);
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        nav button:hover {
+            background: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .producto {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .producto:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        .producto-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        .producto:hover .producto-img {
+            transform: scale(1.05);
+        }
+        .producto h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        .producto p {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+            flex: 1;
+        }
+        .precio {
+            color: #27ae60;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        button:disabled {
+            background: #bdc3c7;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        .carrito-item {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.2rem;
+            margin: 0.8rem 0;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal h3 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .modal input, .modal select, .modal textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        .modal input:focus, .modal select:focus, .modal textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        .modal textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .seccion {
+            display: none;
+        }
+        .activa {
+            display: block;
+        }
+        .contador-carrito {
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .resumen-pago {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 4px solid #3498db;
+        }
+        .costo-envio {
+            color: #e67e22;
+            font-weight: bold;
+        }
+        
+        /* Footer mejorado */
+        .footer {
+            background: rgba(44, 62, 80, 0.95);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: auto;
+            backdrop-filter: blur(10px);
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .footer-creator {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.2rem;
+            background: rgba(255,255,255,0.1);
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+        .footer-creator:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+        .pc-icon {
+            font-size: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .footer-info {
+            color: #bdc3c7;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Mejoras para el catálogo */
+        .catalogo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .catalogo-header h2 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .catalogo-header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.3rem;
+        }
+
+        /* Categoría badge */
+        .categoria-badge {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(231, 76, 60, 0.3);
+        }
+
+        /* Stock indicator */
+        .stock-info {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+        .stock-bueno { color: #27ae60; }
+        .stock-bajo { color: #f39c12; }
+        .stock-agotado { color: #e74c3c; }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .productos-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+            .catalogo-header h2 {
+                font-size: 2.2rem;
+            }
+            nav {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🛍️ Tienda de Ropa - Dubis</h1>
+    </header>
+    
+    <nav>
+        <button onclick="mostrarSeccion('catalogo')">🏠 Productos</button>
+        <button onclick="mostrarSeccion('carrito')">🛒 Carrito <span id="contador-carrito" class="contador-carrito">0</span></button>
+    </nav>
+
+    <div class="container">
+        <!-- Catálogo de Productos -->
+        <div id="catalogo" class="seccion activa">
+            <div class="catalogo-header">
+                <h2>Descubre Nuestro Catálogo</h2>
+                <p>Las mejores prendas con estilo y calidad</p>
+            </div>
+            <div id="productos-grid" class="productos-grid">
+                <!-- Los productos se cargan aquí -->
+            </div>
+        </div>
+
+        <!-- Carrito -->
+        <div id="carrito" class="seccion">
+            <h2 style="color: white; text-align: center; margin-bottom: 2rem;">🛒 Tu Carrito de Compras</h2>
+            <div id="lista-carrito">
+                <!-- Items del carrito -->
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <h3 style="color: white;">Total: $<span id="total">0</span></h3>
+                <button onclick="procesarPago()" style="background: linear-gradient(135deg, #27ae60, #2ecc71); padding: 1.2rem 2.5rem; font-size: 1.2rem; margin-top: 1rem;">
+                    🏦 Proceder al Pago
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-creator">
+                <span class="pc-icon">💻</span>
+                <span>Creado por <strong>dubis</strong></span>
+            </div>
+            <div class="footer-info">
+                © 2024 Tienda de Ropa - Todos los derechos reservados
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Pago -->
+    <div id="modalPago" class="modal">
+        <div class="modal-content">
+            <h3>🏦 Finalizar Compra</h3>
+            
+            <div class="resumen-pago">
+                <h4>Resumen del Pedido</h4>
+                <p>Subtotal: $<span id="subtotal-pago">0</span></p>
+                <p class="costo-envio">Costo de envío: $<span id="costo-envio">10,000</span></p>
+                <p><strong>Total a pagar: $<span id="total-pago">0</span></strong></p>
+            </div>
+
+            <h4>📦 Información de Envío</h4>
+            <div class="form-group">
+                <label for="direccion">Dirección completa *</label>
+                <textarea id="direccion" placeholder="Calle, número, barrio, ciudad" required></textarea>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="ciudad">Ciudad *</label>
+                    <input type="text" id="ciudad" placeholder="Ciudad" required>
+                </div>
+                <div class="form-group">
+                    <label for="codigo-postal">Código Postal *</label>
+                    <input type="text" id="codigo-postal" placeholder="Código postal" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="departamento">Departamento *</label>
+                <select id="departamento" required>
+                    <option value="">Selecciona tu departamento</option>
+                    <option value="antioquia">Antioquia</option>
+                    <option value="bogota">Bogotá D.C.</option>
+                    <option value="valle">Valle del Cauca</option>
+                    <option value="cundinamarca">Cundinamarca</option>
+                    <option value="atlantico">Atlántico</option>
+                    <option value="santander">Santander</option>
+                    <option value="bolivar">Bolívar</option>
+                    <option value="nariño">Nariño</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+
+            <h4>👤 Información Personal</h4>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nombre">Nombre completo *</label>
+                    <input type="text" id="nombre" placeholder="Nombre completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono *</label>
+                    <input type="tel" id="telefono" placeholder="Número de teléfono" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" placeholder="correo@ejemplo.com" required>
+            </div>
+
+            <h4>💳 Información de Pago</h4>
+            <div class="form-group">
+                <label for="tarjeta">Número de tarjeta *</label>
+                <input type="text" id="tarjeta" placeholder="1234 5678 9012 3456" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="vencimiento">Fecha vencimiento *</label>
+                    <input type="text" id="vencimiento" placeholder="MM/AA" required>
+                </div>
+                <div class="form-group">
+                    <label for="cvv">CVV *</label>
+                    <input type="text" id="cvv" placeholder="123" required maxlength="3">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button onclick="confirmarPago()" style="background: linear-gradient(135deg, #27ae60, #2ecc71); flex: 1; padding: 1rem;">
+                    ✅ Confirmar Pago
+                </button>
+                <button onclick="cerrarModal()" style="background: linear-gradient(135deg, #e74c3c, #c0392b); flex: 1; padding: 1rem;">
+                    ❌ Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let carrito = [];
+        let productos = [];
+        let categorias = [];
+
+        // Función para obtener imagen según el tipo de producto
+        function obtenerImagenProducto(producto) {
+            const nombre = producto.nombre.toLowerCase();
+            const categoria = producto.categoria_nombre.toLowerCase();
+            
+            // Mapeo de imágenes por categoría y nombre
+            const imagenes = {
+                'camiseta': 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop',
+                'pantalón': 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=300&fit=crop',
+                'jeans': 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=300&fit=crop',
+                'chaqueta': 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=300&fit=crop',
+                'sudadera': 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=300&fit=crop',
+                'vestido': 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=300&fit=crop',
+                'camisa': 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=300&fit=crop',
+                'boxer': 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=400&h=300&fit=crop',
+                'zapatilla': 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=300&fit=crop',
+                'gorra': 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=300&fit=crop',
+                'leggins': 'https://images.unsplash.com/photo-1506629905607-e48b0e67d879?w=400&h=300&fit=crop'
+            };
+
+            // Buscar por palabras clave en el nombre
+            for (const [key, image] of Object.entries(imagenes)) {
+                if (nombre.includes(key)) {
+                    return image;
+                }
+            }
+
+            // Buscar por categoría
+            for (const [key, image] of Object.entries(imagenes)) {
+                if (categoria.includes(key)) {
+                    return image;
+                }
+            }
+
+            // Imagen por defecto
+            return 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop';
+        }
+
+        // Función para obtener el nombre de la categoría por ID
+        function obtenerNombreCategoria(idCategoria) {
+            const categoria = categorias.find(cat => cat.id_categoria === idCategoria);
+            return categoria ? categoria.nombre : 'General';
+        }
+
+        // Cargar productos desde la base de datos
+        async function cargarProductos() {
+            try {
+                // Mostrar loading
+                document.getElementById('productos-grid').innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; color: white; padding: 2rem;">
+                        <div class="loading" style="margin: 0 auto 1rem;"></div>
+                        <p>Cargando productos...</p>
+                    </div>
+                `;
+
+                // Primero cargar categorías
+                const catResponse = await fetch('http://localhost:3000/api/categorias');
+                categorias = await catResponse.json();
+                console.log('📂 Categorías cargadas:', categorias);
+
+                // Luego cargar productos
+                const response = await fetch('http://localhost:3000/api/productos');
+                const data = await response.json();
+                
+                // Mapear los datos de la BD
+                productos = data.map(producto => ({
+                    id: producto.id_producto,
+                    nombre: producto.nombre,
+                    precio: producto.precio,
+                    descripcion: producto.descripcion,
+                    stock: producto.stock,
+                    estado: producto.estado,
+                    id_categoria: producto.id_categoria,
+                    categoria_nombre: obtenerNombreCategoria(producto.id_categoria),
+                    imagen: obtenerImagenProducto({
+                        nombre: producto.nombre,
+                        categoria_nombre: obtenerNombreCategoria(producto.id_categoria)
+                    })
+                }));
+                
+                console.log('📦 Productos cargados:', productos);
+                mostrarProductos();
+                
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                // Datos de ejemplo basados en tu DB real con imágenes
+                productos = [
+                    { 
+                        id: 21, 
+                        nombre: "Camiseta básica blanca", 
+                        precio: 45000, 
+                        descripcion: "Camiseta de algodón 100% para uso diario", 
+                        stock: 120, 
+                        categoria_nombre: "Camisetas",
+                        imagen: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop"
+                    },
+                    { 
+                        id: 22, 
+                        nombre: "Pantalón jeans azul", 
+                        precio: 120000, 
+                        descripcion: "Jean clásico corte recto", 
+                        stock: 80, 
+                        categoria_nombre: "Pantalones",
+                        imagen: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=300&fit=crop"
+                    },
+                    { 
+                        id: 23, 
+                        nombre: "Chaqueta de cuero", 
+                        precio: 250000, 
+                        descripcion: "Chaqueta negra sintética con cierre frontal", 
+                        stock: 40, 
+                        categoria_nombre: "Chaquetas",
+                        imagen: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=300&fit=crop"
+                    },
+                    { 
+                        id: 24, 
+                        nombre: "Sudadera deportiva", 
+                        precio: 95000, 
+                        descripcion: "Sudadera liviana para entrenamiento", 
+                        stock: 60, 
+                        categoria_nombre: "Sudaderas",
+                        imagen: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=300&fit=crop"
+                    },
+                    { 
+                        id: 25, 
+                        nombre: "Vestido floral", 
+                        precio: 110000, 
+                        descripcion: "Vestido de verano con estampado floral", 
+                        stock: 50, 
+                        categoria_nombre: "Vestidos",
+                        imagen: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=300&fit=crop"
+                    },
+                    { 
+                        id: 26, 
+                        nombre: "Camisa formal celeste", 
+                        precio: 85000, 
+                        descripcion: "Camisa de algodón para oficina", 
+                        stock: 70, 
+                        categoria_nombre: "Camisas",
+                        imagen: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=300&fit=crop"
+                    },
+                    { 
+                        id: 27, 
+                        nombre: "Boxers pack x3", 
+                        precio: 60000, 
+                        descripcion: "Set de 3 boxers de microfibra", 
+                        stock: 100, 
+                        categoria_nombre: "Ropa interior",
+                        imagen: "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=400&h=300&fit=crop"
+                    },
+                    { 
+                        id: 28, 
+                        nombre: "Zapatillas urbanas", 
+                        precio: 180000, 
+                        descripcion: "Calzado casual unisex", 
+                        stock: 45, 
+                        categoria_nombre: "Zapatos",
+                        imagen: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=300&fit=crop"
+                    },
+                    { 
+                        id: 29, 
+                        nombre: "Gorra negra ajustable", 
+                        precio: 40000, 
+                        descripcion: "Accesorio de algodón con broche metálico", 
+                        stock: 90, 
+                        categoria_nombre: "Accesorios",
+                        imagen: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=300&fit=crop"
+                    },
+                    { 
+                        id: 30, 
+                        nombre: "Leggins deportivos", 
+                        precio: 80000, 
+                        descripcion: "Pantalón elástico para entrenamiento", 
+                        stock: 75, 
+                        categoria_nombre: "Deportiva",
+                        imagen: "https://images.unsplash.com/photo-1506629905607-e48b0e67d879?w=400&h=300&fit=crop"
+                    }
+                ];
+                mostrarProductos();
+            }
+        }
+
+        function mostrarProductos() {
+            const grid = document.getElementById('productos-grid');
+            
+            grid.innerHTML = productos.map((producto) => {
+                const disponible = producto.stock > 0;
+                const stockClass = producto.stock > 20 ? 'stock-bueno' : 
+                                 producto.stock > 0 ? 'stock-bajo' : 'stock-agotado';
+                const stockText = disponible ? 
+                    (producto.stock > 20 ? '✅ En stock' : `⚠️ Solo ${producto.stock} unidades`) : 
+                    '❌ Agotado';
+                
+                return `
+                    <div class="producto">
+                        <img src="${producto.imagen}" alt="${producto.nombre}" class="producto-img" 
+                             onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop'">
+                        <span class="categoria-badge">${producto.categoria_nombre || 'General'}</span>
+                        <h3>${producto.nombre}</h3>
+                        <p>${producto.descripcion || ''}</p>
+                        <p class="stock-info ${stockClass}">${stockText}</p>
+                        <p class="precio">$${producto.precio.toLocaleString()}</p>
+                        <button 
+                            onclick="agregarAlCarrito(${producto.id})" 
+                            ${!disponible ? 'disabled' : ''}
+                        >
+                            ${disponible ? '🛒 Agregar al Carrito' : '❌ Agotado'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ... (el resto del código JavaScript se mantiene igual que en la versión anterior)
+        // [Aquí irían las funciones agregarAlCarrito, eliminarDelCarrito, actualizarCarrito, etc.]
+        // Para ahorrar espacio, mantengo solo las funciones principales
+
+        function agregarAlCarrito(idProducto) {
+            const producto = productos.find(p => p.id === idProducto);
+            
+            if (!producto) {
+                console.error('❌ Producto no encontrado');
+                return;
+            }
+
+            if (producto.stock <= 0) {
+                alert('❌ Este producto está agotado');
+                return;
+            }
+
+            const itemExistente = carrito.find(item => item.id === idProducto);
+
+            if (itemExistente) {
+                if (itemExistente.cantidad >= producto.stock) {
+                    alert(`❌ Solo hay ${producto.stock} unidades disponibles`);
+                    return;
+                }
+                itemExistente.cantidad++;
+            } else {
+                carrito.push({
+                    id: producto.id,
+                    nombre: producto.nombre,
+                    precio: producto.precio,
+                    cantidad: 1,
+                    stock_disponible: producto.stock,
+                    imagen: producto.imagen
+                });
+            }
+
+            actualizarCarrito();
+            
+            // Efecto visual
+            const boton = event.target;
+            const originalText = boton.textContent;
+            boton.textContent = '✅ Agregado!';
+            boton.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+            setTimeout(() => {
+                boton.textContent = originalText;
+                boton.style.background = 'linear-gradient(135deg, #3498db, #2980b9)';
+            }, 1000);
+        }
+
+        function eliminarDelCarrito(id) {
+            carrito = carrito.filter(item => item.id !== id);
+            actualizarCarrito();
+        }
+
+        function actualizarCarrito() {
+            const lista = document.getElementById('lista-carrito');
+            const contador = document.getElementById('contador-carrito');
+            const totalElement = document.getElementById('total');
+
+            // Actualizar contador
+            const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            contador.textContent = totalItems;
+
+            // Actualizar lista
+            if (carrito.length === 0) {
+                lista.innerHTML = '<p style="text-align: center; color: white; padding: 2rem; font-size: 1.1rem;">🛒 Tu carrito está vacío</p>';
+                totalElement.textContent = '0';
+                return;
+            }
+
+            lista.innerHTML = carrito.map(item => `
+                <div class="carrito-item">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="${item.imagen}" alt="${item.nombre}" style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover;">
+                        <div>
+                            <strong>${item.nombre}</strong>
+                            <p>Cantidad: ${item.cantidad} - $${(item.precio * item.cantidad).toLocaleString()}</p>
+                            <small style="color: #7f8c8d;">Stock disponible: ${item.stock_disponible}</small>
+                        </div>
+                    </div>
+                    <button onclick="eliminarDelCarrito(${item.id})" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">🗑️</button>
+                </div>
+            `).join('');
+
+            // Calcular total
+            const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            totalElement.textContent = total.toLocaleString();
+        }
+
+        function mostrarSeccion(seccion) {
+            document.querySelectorAll('.seccion').forEach(sec => {
+                sec.classList.remove('activa');
+            });
+            document.getElementById(seccion).classList.add('activa');
+        }
+
+        function procesarPago() {
+            if (carrito.length === 0) {
+                alert('🛒 El carrito está vacío');
+                return;
+            }
+
+            // Verificar stock antes de proceder al pago
+            for (const item of carrito) {
+                const producto = productos.find(p => p.id === item.id);
+                if (!producto || producto.stock < item.cantidad) {
+                    alert(`❌ "${item.nombre}" ya no tiene suficiente stock disponible`);
+                    return;
+                }
+            }
+
+            const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            const costoEnvio = 10000;
+            const total = subtotal + costoEnvio;
+
+            document.getElementById('subtotal-pago').textContent = subtotal.toLocaleString();
+            document.getElementById('costo-envio').textContent = costoEnvio.toLocaleString();
+            document.getElementById('total-pago').textContent = total.toLocaleString();
+            
+            document.getElementById('modalPago').style.display = 'flex';
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalPago').style.display = 'none';
+            // Limpiar campos del formulario
+            document.getElementById('nombre').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('telefono').value = '';
+            document.getElementById('direccion').value = '';
+            document.getElementById('ciudad').value = '';
+            document.getElementById('codigo-postal').value = '';
+            document.getElementById('departamento').value = '';
+            document.getElementById('tarjeta').value = '';
+            document.getElementById('vencimiento').value = '';
+            document.getElementById('cvv').value = '';
+        }
+
+        async function confirmarPago() {
+            // Obtener todos los valores del formulario
+            const nombre = document.getElementById('nombre').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const telefono = document.getElementById('telefono').value.trim();
+            const direccion = document.getElementById('direccion').value.trim();
+            const ciudad = document.getElementById('ciudad').value.trim();
+            const codigoPostal = document.getElementById('codigo-postal').value.trim();
+            const departamento = document.getElementById('departamento').value;
+            const tarjeta = document.getElementById('tarjeta').value.trim();
+            const vencimiento = document.getElementById('vencimiento').value.trim();
+            const cvv = document.getElementById('cvv').value.trim();
+
+            // Validar campos obligatorios
+            if (!nombre || !email || !telefono || !direccion || !ciudad || !codigoPostal || !departamento || !tarjeta || !vencimiento || !cvv) {
+                alert('❌ Por favor completa todos los campos obligatorios (*)');
+                return;
+            }
+
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('❌ Por favor ingresa un email válido');
+                return;
+            }
+
+            // Simular procesamiento de pago
+            const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            const costoEnvio = 10000;
+            const total = subtotal + costoEnvio;
+
+            try {
+                // Simular guardado en BD
+                console.log('💾 Guardando pedido en BD...', {
+                    cliente: { nombre, email, telefono },
+                    direccion: { direccion, ciudad, codigoPostal, departamento },
+                    carrito: carrito,
+                    total: total
+                });
+
+                alert(`¡Pago exitoso! 🎉\n\nGracias por tu compra, ${nombre}.\n\n📦 Tu pedido será enviado a:\n${direccion}\n${ciudad}, ${departamento}\nCódigo Postal: ${codigoPostal}\n\n💰 Total pagado: $${total.toLocaleString()}\n📧 Se envió un recibo a: ${email}`);
+                
+                // Limpiar carrito
+                carrito = [];
+                actualizarCarrito();
+                cerrarModal();
+                mostrarSeccion('catalogo');
+                
+                // Recargar productos para actualizar stock
+                cargarProductos();
+                
+            } catch (error) {
+                alert('❌ Error al procesar el pago. Por favor intenta nuevamente.');
+                console.error('Error:', error);
+            }
+        }
+
+        // Cargar productos al iniciar
+        cargarProductos();
+    </script>
+</body>
+</html>
