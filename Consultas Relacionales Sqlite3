@@ -1,0 +1,175 @@
+.headers on
+.mode column
+
+-- =====================================================
+-- =============== CONSULTAS RELACIONALES ===============
+-- =====================================================
+
+.print ''
+.print 'EFICIENCIA DE TRANSPORTADORAS'
+.print '========================================='
+
+SELECT 
+    transportadora AS "Transportadora",
+    COUNT(*) AS "Total_Envíos",
+    SUM(CASE WHEN estado_envio = 'entregado' THEN 1 ELSE 0 END) AS "Entregados",
+    SUM(CASE WHEN estado_envio = 'enviado' THEN 1 ELSE 0 END) AS "En_Camino",
+    ROUND(SUM(CASE WHEN estado_envio = 'entregado' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) || '%' AS "Tasa_Éxito"
+FROM Envio
+GROUP BY transportadora
+ORDER BY Total_Envíos DESC;
+
+.print ''
+.print 'MÉTODOS DE PAGO MÁS USADOS'
+.print '========================================='
+
+SELECT 
+    metodo AS "Método_Pago",
+    COUNT(*) AS "Veces_Utilizado",
+    SUM(monto) AS "Total_Procesado",
+    ROUND(AVG(monto), 2) AS "Promedio_Transacción"
+FROM Pago
+GROUP BY metodo
+ORDER BY Veces_Utilizado DESC;
+
+.print ''
+.print 'ANÁLISIS DE STOCK Y VENTAS'
+.print '========================================='
+
+SELECT 
+    p.nombre AS "Producto",
+    p.stock AS "Stock_Actual",
+    COALESCE(SUM(dp.cantidad), 0) AS "Total_Vendido",
+    ROUND(COALESCE(SUM(dp.cantidad), 0) * 100.0 / p.stock, 1) || '%' AS "Rotación"
+FROM Producto p
+LEFT JOIN DetallePedido dp ON p.id_producto = dp.id_producto
+GROUP BY p.id_producto
+ORDER BY Stock_Actual ASC;
+
+.print ''
+.print 'TIEMPOS DE ENTREGA'
+.print '========================================='
+
+SELECT 
+    transportadora AS "Transportadora",
+    COUNT(*) AS "Entregas_Completadas",
+    ROUND(AVG(JULIANDAY(fecha_entrega) - JULIANDAY(fecha_envio)), 1) AS "Días_Promedio"
+FROM Envio
+WHERE estado_envio = 'entregado' 
+  AND fecha_entrega IS NOT NULL
+GROUP BY transportadora
+ORDER BY Días_Promedio ASC;
+
+.print ''
+.print 'ESTADO DE PEDIDOS'
+.print '========================================='
+
+SELECT 
+    estado AS "Estado",
+    COUNT(*) AS "Cantidad",
+    SUM(total) AS "Total_Ventas"
+FROM Pedido
+GROUP BY estado
+ORDER BY Cantidad DESC;
+
+.print ''
+.print 'PAGOS POR ESTADO'
+.print '========================================='
+
+SELECT 
+    estado AS "Estado_Pago",
+    COUNT(*) AS "Cantidad",
+    SUM(monto) AS "Total_Monto"
+FROM Pago
+GROUP BY estado
+ORDER BY Cantidad DESC;
+
+.print ''
+.print 'ESTADÍSTICAS DE PAGOS POR MÉTODO'
+.print '========================================='
+
+SELECT 
+    metodo AS "Método_Pago",
+    COUNT(*) AS "Total_Transacciones",
+    ROUND(AVG(monto), 2) AS "Monto_Promedio",
+    MIN(monto) AS "Monto_Mínimo",
+    MAX(monto) AS "Monto_Máximo",
+    SUM(monto) AS "Total_Procesado"
+FROM Pago
+GROUP BY metodo
+ORDER BY Total_Procesado DESC;
+
+.print ''
+.print 'ANÁLISIS DE DETALLES DE PEDIDOS'
+.print '========================================='
+
+SELECT 
+    COUNT(*) AS "Total_Detalles_Pedido",
+    ROUND(AVG(cantidad), 2) AS "Cantidad_Promedio",
+    MIN(cantidad) AS "Cantidad_Mínima",
+    MAX(cantidad) AS "Cantidad_Máxima",
+    ROUND(AVG(precio_unitario), 2) AS "Precio_Unitario_Promedio",
+    SUM(subtotal) AS "Total_Vendido"
+FROM DetallePedido;
+
+.print ''
+.print 'ANÁLISIS DE PEDIDOS POR ESTADO'
+.print '========================================='
+
+SELECT 
+    estado AS "Estado_Pedido",
+    COUNT(*) AS "Cantidad_Pedidos",
+    ROUND(AVG(total), 2) AS "Ticket_Promedio",
+    MIN(total) AS "Ticket_Mínimo",
+    MAX(total) AS "Ticket_Máximo",
+    SUM(total) AS "Valor_Total"
+FROM Pedido
+GROUP BY estado
+ORDER BY Cantidad_Pedidos DESC;
+
+.print ''
+.print 'ESTADÍSTICAS DE PRODUCTOS POR PRECIO'
+.print '========================================='
+
+SELECT 
+    COUNT(*) AS "Total_Productos",
+    ROUND(AVG(precio), 2) AS "Precio_Promedio",
+    MIN(precio) AS "Precio_Mínimo",
+    MAX(precio) AS "Precio_Máximo",
+    SUM(stock) AS "Total_Stock",
+    SUM(precio * stock) AS "Valor_Total_Inventario"
+FROM Producto
+WHERE estado = 'activo';
+
+.print ''
+.print 'ESTADÍSTICAS DE CLIENTES Y SUS COMPRAS'
+.print '========================================='
+
+SELECT 
+    COUNT(DISTINCT c.id_cliente) AS "Total_Clientes",
+    COUNT(p.id_pedido) AS "Total_Pedidos",
+    ROUND(AVG(p.total), 2) AS "Ticket_Promedio",
+    MIN(p.total) AS "Pedido_Más_Pequeño",
+    MAX(p.total) AS "Pedido_Más_Grande",
+    SUM(p.total) AS "Ventas_Totales"
+FROM Cliente c
+LEFT JOIN Pedido p ON c.id_cliente = p.id_cliente
+WHERE p.estado = 'completado' OR p.id_pedido IS NULL;
+
+
+.print ''
+.print 'ESTADÍSTICAS DE ENVÍOS POR ESTADO'
+.print '========================================='
+
+SELECT 
+    estado_envio AS "Estado_Envío",
+    COUNT(*) AS "Total_Envíos",
+    ROUND(AVG(JULIANDAY(fecha_entrega) - JULIANDAY(fecha_envio)), 1) AS "Días_Promedio_Entrega",
+    MIN(JULIANDAY(fecha_entrega) - JULIANDAY(fecha_envio)) AS "Días_Mínimos",
+    MAX(JULIANDAY(fecha_entrega) - JULIANDAY(fecha_envio)) AS "Días_Máximos"
+FROM Envio
+WHERE estado_envio = 'entregado' 
+  AND fecha_envio IS NOT NULL 
+  AND fecha_entrega IS NOT NULL
+GROUP BY estado_envio
+ORDER BY Total_Envíos DESC;
