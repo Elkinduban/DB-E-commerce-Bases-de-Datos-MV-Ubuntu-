@@ -1,19 +1,20 @@
-dubis@dubis-VirtualBox: 
-sudo apt install sqlite3 -y
-sqlite3 --version
-sqlite3 ecommerce.db
-sqlite3 ecommerce.db .dump > backup.sql
-sqlite3 ecommerce.db
-sqlite3 ecommerce.db < consultas.sql
-sqlite3 ecommerce.db
+dubis@dubis-VirtualBox: sudo apt install sqlite3 -y
+dubis@dubis-VirtualBox: sqlite3 --version
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db .dump > backup.sql
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db < consultas.sql
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db
 
-which sqlite_web
-sqlite_web /home/dubis/proyectos/ecommerce.db
-sqlite_web ecommerce.db
-npm install express sqlite3
+dubis@dubis-VirtualBox: which sqlite_web
+dubis@dubis-VirtualBox: sqlite_web /home/dubis/proyectos/ecommerce.db
+dubis@dubis-VirtualBox: sqlite_web ecommerce.db
+
+dubis@dubis-VirtualBox: npm install express sqlite3
 
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('/home/dubis/proyectos/ecommerce.db');
-dubis> sqlite3 ecommerce.db < consultas.sql
-sqlite3 ecommerce.db < consultas.sql
-sqlite3 ecommerce.db
+
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db < consultas.sql
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db < consultas.sql
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db
