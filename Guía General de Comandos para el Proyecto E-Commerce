@@ -1,0 +1,110 @@
+---------------- COMANDOS DB -------------------
+
+# Entrar a la base de datos
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db
+
+# Ver tablas creadas
+sqlite> .tables
+
+# Guardar y salir
+sqlite> .exit
+
+# Mostrar tablas con encabezados y formato columna
+sqlite> .headers on
+sqlite> .mode column
+
+# Ver contenido de una tabla
+sqlite> SELECT * FROM Cliente;
+
+# Ver estructura de la tabla
+sqlite> .schema Cliente
+
+---------------- INSERTAR DATOS ---------------------
+
+# Cliente
+sqlite> INSERT INTO Cliente (nombre, apellido, email, telefono, contraseña_hash)
+VALUES ();
+
+# Direccion
+sqlite> INSERT INTO Direccion (id_cliente, ciudad, departamento, codigo_postal, detalle)
+VALUES ();
+
+# Categoria
+sqlite> INSERT INTO Categoria (nombre, descripcion)
+VALUES ();
+
+# Producto
+sqlite> INSERT INTO Producto (nombre, descripcion, precio, stock, estado, id_categoria)
+VALUES ();
+
+# Carrito
+sqlite> INSERT INTO Carrito (id_cliente, estado)
+VALUES ();
+
+# ItemCarrito
+sqlite> INSERT INTO ItemCarrito (id_carrito, id_producto, cantidad)
+VALUES ();
+
+# Pedido
+sqlite> INSERT INTO Pedido (id_cliente, estado, total)
+VALUES ();
+
+# DetallePedido
+sqlite> INSERT INTO DetallePedido (id_pedido, id_producto, cantidad, precio_unitario, subtotal)
+VALUES ();
+
+# Pago
+sqlite> INSERT INTO Pago (id_pedido, metodo, monto, estado)
+VALUES ();
+
+# Envio
+sqlite> INSERT INTO Envio (id_pedido, transportadora, numero_guia, estado_envio, fecha_envio, fecha_entrega)
+VALUES ();
+
+---------------- CONSULTAS RELACIONALES ----------------
+
+# Ejecutar archivo de consultas
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db < consultas.sql
+
+# Editar archivo de consultas
+dubis@dubis-VirtualBox: nano consultas.sql
+
+# Exportar la base de datos
+dubis@dubis-VirtualBox: sqlite3 ecommerce.db .dump > backup.sql
+
+---------------- PAGINA WEB -------------------------
+
+# Conexión con la página web
+dubis@dubis-VirtualBox: cd ecommerce-web
+dubis@dubis-VirtualBox:~/ecommerce-web$ node server.js
+
+# Acceso desde navegador
+http://localhost:3000/
+
+# Editar página web
+dubis@dubis-VirtualBox: cd ecommerce-web
+ecommerce-web> nano public/index.html
+
+# Publicar página con Ngrok
+dubis@dubis-VirtualBox: node server.js
+dubis@dubis-VirtualBox: ngrok http 3000
+
+---------------- ENTORNO PYMONGO -----------------
+
+# Activar entorno MongoDB
+dubis@dubis-VirtualBox: source mongodb_env/bin/activate
+
+# Entrar al proyecto
+mongodb_env> cd ~/ecommerce_mongodb
+
+# Iniciar MongoDB en Docker
+mongodb_env> docker start mongodb
+
+# Sincronizar DB
+mongodb_env> python3 sync_simple.py
+
+# Búsquedas avanzadas
+mongodb_env> python3 test_busquedas.py
+
+# Dashboard general
+mongodb_env> python3 dashboard.py
