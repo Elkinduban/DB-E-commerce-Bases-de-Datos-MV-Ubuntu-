@@ -1,0 +1,85 @@
+==================== ACTUALIZACIONES E INSTALACIÓN BASE ====================
+
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y unzip wget
+sudo apt install -y curl
+sudo apt install -y build-essential dkms linux-headers-$(uname -r) bzip2 tar
+sudo apt install -y python3-pip
+sudo apt install -y python3-pymongo
+sudo apt install -y python3-venv python3-full
+sudo apt install -y docker.io
+
+
+============================== SSH ==============================
+
+sudo apt install openssh-server -y
+
+
+==================== NGROK / CLOUDFLARED / TELECONSOLE ====================
+
+wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-stable-linux-amd64.zip
+
+curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -o cloudflared.deb
+sudo apt -f install -y
+
+wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+
+curl ifconfig.me
+
+curl -s https://www.teleconsole.com/get.sh | sh
+curl -fsSL https://www.teleconsole.com/get.sh -o get.sh
+
+
+========================= ENTORNO GRÁFICO =========================
+
+sudo apt install -y xfce4 xfce4-goodies
+
+
+=============================== SQLITE ===============================
+
+sudo apt install sqlite3 -y
+sqlite3 --version
+sqlite3 ecommerce.db
+sqlite3 ecommerce.db .dump > backup.sql
+sqlite3 ecommerce.db < consultas.sql
+
+which sqlite_web
+sqlite_web /home/dubis/proyectos/ecommerce.db
+sqlite_web ecommerce.db
+
+
+=========================== NODEJS Y DEPENDENCIAS ===========================
+
+sudo apt install -y nodejs npm
+npm install express sqlite3
+
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('/home/dubis/proyectos/ecommerce.db');
+
+
+============================ MONGODB (VARIAS VERSIONES) ============================
+
+sudo apt install -y mongodb
+
+wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+sudo apt update
+sudo apt install -y mongodb-org
+
+sudo apt remove --purge mongodb-org* -y
+sudo rm -f /etc/apt/sources.list.d/mongodb-org-*.list
+sudo apt update
+
+wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+sudo apt update
+sudo apt install -y mongodb-org
+
+pip3 install pymongo
+pip install pymongo
+
+
+============================== OTROS ==============================
+
+sudo apt install -y wget curl gnupg
