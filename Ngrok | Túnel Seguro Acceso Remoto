@@ -1,0 +1,13 @@
+dubis@dubis-VirtualBox: wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-stable-linux-amd64.zip
+dubis@dubis-VirtualBox: unzip ngrok-stable-linux-amd64.zip
+dubis@dubis-VirtualBox: sudo mv ngrok /usr/local/bin/
+dubis@dubis-VirtualBox: sudo chmod +x /usr/local/bin/ngrok
+dubis@dubis-VirtualBox: ngrok version
+dubis@dubis-VirtualBox: ngrok config add-authtoken 331mMMRt5J0qMFV6hWhlxQJdAtR_289oeU4tJxtXoHccRJEjH
+dubis@dubis-VirtualBox: sudo -u dubis ngrok config add-authtoken 331mMMRt5J0qMFV6hWhlxQJdAtR_289oeU4tJxtXoHccRJEjH331mMMRt5J0qMFV6hWhlxQJdAtR_289oeU4tJxtXoHccRJEjH
+dubis@dubis-VirtualBox: ngrok tcp 22
+dubis@dubis-VirtualBox: rm -rf ~/.config/ngrok
+dubis@dubis-VirtualBox: ngrok config add-authtoken 331mMMRt5J0qMFV6hWhlxQJdAtR_289oeU4tJxtXoHccRJEjH
+dubis@dubis-VirtualBox: cat ~/.config/ngrok/ngrok.yml
+dubis@dubis-VirtualBox: ngrok tcp 22
+dubis@dubis-VirtualBox: ngrok http 3000
