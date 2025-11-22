@@ -4,7 +4,6 @@ sqlite3 --version
 sqlite3 ecommerce.db
 sqlite3 ecommerce.db .dump > backup.sql
 sqlite3 ecommerce.db
-sqlite3 ecommerce.db .dump > backup.sql
 sqlite3 ecommerce.db < consultas.sql
 sqlite3 ecommerce.db
 
@@ -18,4 +17,3 @@ const db = new sqlite3.Database('/home/dubis/proyectos/ecommerce.db');
 dubis> sqlite3 ecommerce.db < consultas.sql
 sqlite3 ecommerce.db < consultas.sql
 sqlite3 ecommerce.db
-
